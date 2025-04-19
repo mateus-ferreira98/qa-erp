@@ -19,8 +19,6 @@ describe('Produtos', () => {
         .should('contain', 'O nome do produto é obrigatório')
       cy.get('[data-component-line="157"] > .text-red-600')
         .should('contain', 'O preço deve ser maior que 0')
-  
-      // Unidade medida não pode ser Unidade (UN) por default
     })
 
     it('Adicionar produto válido', () => {
@@ -36,7 +34,6 @@ describe('Produtos', () => {
       cy.contains('button', 'Criar produto').click()
       cy.get('main.p-6')
         .should('contain', 'Samsung Celular Galaxy A16')
-      // Observação: Ter uma showst mostrando que o produto foi adicionado.
     })
      
     it('Adicionar produto sem passar estoque atual', () => {
@@ -51,8 +48,6 @@ describe('Produtos', () => {
   
       cy.get('[data-component-line="202"] > .text-red-600')
         .should('contain', 'O estoque atual deve ser maior que 0')
-  
-      // Deveria não poder cadastrar sem mostrar o estoque
     })
   })
 
@@ -95,12 +90,10 @@ describe('Produtos', () => {
       cy.get('main.p-6')
         .should('contain', '1350')
         .and('contain', '25')
-      
-      // Formatar campos númericos  
     })
   })
 
-  describe.only('Excluir produto', () => {
+  describe('Excluir produto', () => {
     it('Excluindo', () => {
       cy.get(':nth-child(1) > .text-right > .flex > .text-red-600 > .lucide').click()
       const confirm = cy.on('window:confirm', (msg) => {
@@ -121,8 +114,6 @@ describe('Produtos', () => {
       cy.get('main.p-6')
       .should('contain', 'Laptop Dell XPS')
     })
-
-    // Colocar uma showst de excluido
   })
 })
 
