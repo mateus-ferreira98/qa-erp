@@ -45,8 +45,8 @@ Os arquivos de testes estão sendo organizados dentro da pasta `cypress/e2e/`.
 
 Acompanhe a documentação dos testes:
 
-- [`docs/ct-produtos.md`](docs/ct-produtos.md) – Casos de teste da funcionalidade de produtos
-- [`docs/bugs-produtos.md`](docs/bugs-produtos.md) – Bugs encontrados e sugestões de correção
+- [`docs/caso-testes/ct-produtos.md`](docs/caso-testes/ct-produtos.md) – Casos de teste da funcionalidade de produtos
+- [`docs/bugs/bugs-produtos.md`](docs/bugs/bugs-produtos.md) – Bugs encontrados e sugestões de correção
 
 📌 Esses arquivos estão em constante atualização conforme avanço nos testes.
 
