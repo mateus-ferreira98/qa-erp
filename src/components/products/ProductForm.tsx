@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDatabase } from '@/contexts/DatabaseContext';
 import { Product } from '@/types';
+import toast from 'react-hot-toast';
 
 interface ProductFormProps {
   mode: 'create' | 'edit';
@@ -16,7 +17,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
     name: '',
     description: '',
     unitPrice: 0,
-    unitOfMeasurement: 'UN',
+    unitOfMeasurement: '',
     currentStock: 0,
     minimumStock: 0,
   });
@@ -36,18 +37,51 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
           currentStock: product.currentStock,
           minimumStock: product.minimumStock,
         });
+
+        setFormattedPrice(formatCurrencyInput(product.unitPrice.toString()));
       }
     }
   }, [mode, id, state.products]);
 
+  const formatCurrencyInput = (value: string): string => {
+    const cleaned = value.replace(/\D/g, ''); // só números
+    const number = parseFloat(cleaned) / 100;
+  
+    if (isNaN(number)) return '';
+  
+    return number.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  };
+
+  const [formattedPrice, setFormattedPrice] = useState('R$ 0,00');
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+  
+    const cleaned = rawValue.replace(/\D/g, '');
+    const number = parseFloat(cleaned) / 100;
+  
+    setFormData(prev => ({
+      ...prev,
+      unitPrice: isNaN(number) ? 0 : number
+    }));
+  
+    setFormattedPrice(formatCurrencyInput(rawValue));
+  };
+  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
+
     // Convert numeric values
     if (['unitPrice', 'currentStock', 'minimumStock'].includes(name)) {
+      const numericValue = value.replace(/[^0-9]/g, '');
+
       setFormData(prev => ({
         ...prev,
-        [name]: value === '' ? 0 : Number(value)
+        [name]: numericValue
       }));
     } else {
       setFormData(prev => ({
@@ -71,6 +105,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
     if (!formData.unitOfMeasurement) {
       newErrors.unitOfMeasurement = 'A unidade de medida é obrigatória';
     }
+
+    if (!formData.currentStock) {
+      newErrors.currentStock = 'O estoque atual deve ser obrigatório';
+    }
+
+    if (formData.currentStock <= 0) {
+      newErrors.currentStock = 'O estoque atual deve ser maior que 0';
+    }
     
     if (formData.minimumStock < 0) {
       newErrors.minimumStock = 'O estoque mínimo não pode ser negativo';
@@ -92,6 +134,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
         type: 'ADD_PRODUCT',
         payload: formData
       });
+      toast.success('Produto criado com sucesso!');
       navigate('/products');
     } else if (mode === 'edit' && id) {
       const productId = Number(id);
@@ -107,6 +150,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
             updatedAt: new Date()
           }
         });
+        toast.success('Produto atualizado com sucesso!');
         navigate('/products');
       }
     }
@@ -163,13 +207,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
                 <span className="text-gray-500 sm:text-sm">$</span>
               </div>
               <input
-                type="number"
+                type="text"
                 id="unitPrice"
                 name="unitPrice"
                 step="0.01"
                 min="0"
-                value={formData.unitPrice}
-                onChange={handleChange}
+                value={formattedPrice}
+                onChange={handlePriceChange}
                 className={`pl-7 block w-full border ${errors.unitPrice ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm p-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
@@ -187,6 +231,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
               onChange={handleChange}
               className={`mt-1 block w-full border ${errors.unitOfMeasurement ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm p-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
             >
+              <option value="">Selecione uma unidade</option>
               <option value="UN">Unidade (UN)</option>
               <option value="KG">Quilograma (KG)</option>
               <option value="L">Litro (L)</option>
@@ -201,17 +246,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ mode }) => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="currentStock" className="block text-sm font-medium text-gray-700">
-              Estoque atual
+              Estoque atual *
             </label>
             <input
-              type="number"
+              type="text"
               id="currentStock"
               name="currentStock"
-              min="0"
               value={formData.currentStock}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
+             {errors.currentStock && <p className="mt-1 text-sm text-red-600">{errors.currentStock}</p>}
           </div>
           
           <div>

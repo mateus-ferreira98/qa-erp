@@ -4,11 +4,15 @@ import { useDatabase } from '@/contexts/DatabaseContext';
 import { formatCurrency } from '@/utils/format';
 import { Product } from '@/types';
 import { Package, AlertCircle, Edit, Trash } from 'lucide-react';
+import ConfirmModal from '../modal/ConfirmModal';
+import toast from 'react-hot-toast';
 
 const ProductList: React.FC = () => {
   const { state, dispatch } = useDatabase();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<number | null>(null);
 
   // Filter products based on search query
   const filteredProducts = state.products.filter((product) =>
@@ -18,8 +22,16 @@ const ProductList: React.FC = () => {
 
   // Handle delete product
   const handleDelete = (id: number) => {
-    if (window.confirm('Tem certeza de que deseja excluir este produto?')) {
-      dispatch({ type: 'DELETE_PRODUCT', payload: id });
+    setProductToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (productToDelete !== null) {
+      dispatch({ type: 'DELETE_PRODUCT', payload: productToDelete });
+      toast.success('Produto excluído com sucesso!');
+      setProductToDelete(null);
+      setIsModalOpen(false);
     }
   };
 
@@ -81,6 +93,18 @@ const ProductList: React.FC = () => {
           </tbody>
         </table>
       </div>
+
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Confirmar exclusão">
+        <p>
+          Deseja realmente excluir o produto?<br />
+          Essa ação não poderá ser desfeita.
+        </p>
+      </ConfirmModal>
+
     </div>
   );
 };
