@@ -15,10 +15,17 @@ describe('Produtos', () => {
   
       cy.contains('button', 'Criar produto').click()
   
-      cy.get('[data-component-line="125"] > .text-red-600')
+      cy.get('[data-component-line="169"] > .text-red-600')
         .should('contain', 'O nome do produto é obrigatório')
-      cy.get('[data-component-line="157"] > .text-red-600')
+
+      cy.get('[data-component-line="201"] > .text-red-600')
         .should('contain', 'O preço deve ser maior que 0')
+
+      cy.get('[data-component-line="223"] > .text-red-600')
+        .should('contain', 'A unidade de medida é obrigatória')
+
+      cy.get('[data-component-line="247"] > .text-red-600')
+        .should('contain', 'O estoque atual deve ser maior que 0')
     })
 
     it('Adicionar produto válido', () => {
@@ -28,10 +35,12 @@ describe('Produtos', () => {
       cy.get('#description').type('256GB + 8GB RAM, Câmera de até 50MP, Tela 6.7", NFC, IP54, Bateria 5000 mAh (Cinza)')
       cy.get('#unitPrice').type(1159)
       cy.get('#unitOfMeasurement').select('Unidade (UN)')
-      cy.get('#currentStock').type(10)
-      cy.get('#minimumStock').type(3)
+      cy.get('#currentStock').clear().type(10)
+      cy.get('#minimumStock').clear().type(3)
   
       cy.contains('button', 'Criar produto').click()
+      cy.get('.go2072408551').should('contain', 'Produto criado com sucesso!')
+
       cy.get('main.p-6')
         .should('contain', 'Samsung Celular Galaxy A16')
     })
@@ -46,7 +55,7 @@ describe('Produtos', () => {
   
       cy.contains('button', 'Criar produto').click()
   
-      cy.get('[data-component-line="202"] > .text-red-600')
+      cy.get('[data-component-line="247"] > .text-red-600')
         .should('contain', 'O estoque atual deve ser maior que 0')
     })
   })
@@ -57,7 +66,7 @@ describe('Produtos', () => {
 
       cy.get('input[name="name"]').should('have.value', 'Laptop Dell XPS')
       cy.get('textarea[name="description"').should('have.value', 'High-end laptop with i7 processor and 16GB RAM')
-      cy.get('input[name="unitPrice"]').should('have.value', '1299.99')
+      cy.get('input[name="unitPrice"]').should('have.value', 'R$\u00A01.299,99')
       cy.get('select[name="unitOfMeasurement"]').should('have.value', 'UN')
       cy.get('input[name="currentStock"]').should('have.value', '15')
       cy.get('input[name="minimumStock"]').should('have.value', '5')
@@ -69,47 +78,55 @@ describe('Produtos', () => {
       cy.get('#name').clear()
       cy.get('#description').clear()
       cy.get('#unitPrice').clear()
+      cy.get('#unitOfMeasurement').select('Selecione uma unidade')
       cy.get('#currentStock').clear()
       cy.get('#minimumStock').clear()
 
       cy.contains('button', 'Atualizar produto').click()
 
-      cy.get('[data-component-line="125"] > .text-red-600')
+      cy.get('[data-component-line="169"] > .text-red-600')
         .should('contain', 'O nome do produto é obrigatório')
-      cy.get('[data-component-line="157"] > .text-red-600')
+
+      cy.get('[data-component-line="201"] > .text-red-600')
         .should('contain', 'O preço deve ser maior que 0')
+
+      cy.get('[data-component-line="223"] > .text-red-600')
+        .should('contain', 'A unidade de medida é obrigatória')
+
+      cy.get('[data-component-line="247"] > .text-red-600')
+        .should('contain', 'O estoque atual deve ser maior que 0')
     })
 
     it('Editando produtos com valores validos', () => {
       cy.get(':nth-child(1) > .text-right > .flex > .text-blue-600 > .lucide').click()
 
-      cy.get('#unitPrice').clear().type(1350)
+      cy.get('#unitPrice').clear().type('1,350.00')
       cy.get('#currentStock').clear().type(25)
 
       cy.contains('button', 'Atualizar produto').click()
       cy.get('main.p-6')
-        .should('contain', '1350')
+        .should('contain', '1,350.00')
         .and('contain', '25')
+      
+      cy.get('.go2072408551')
+        .should('contain', 'Produto atualizado com sucesso!')
     })
   })
 
   describe('Excluir produto', () => {
     it('Excluindo', () => {
       cy.get(':nth-child(1) > .text-right > .flex > .text-red-600 > .lucide').click()
-      const confirm = cy.on('window:confirm', (msg) => {
-        expect(msg).to.equal('Tem certeza de que deseja excluir este produto?');
-        return true;
-      });
+      
+      cy.contains('button', 'Confirmar').click()
 
-      expect(confirm).equal(confirm)
+      cy.get('.go2072408551')
+        .should('contain', 'Produto excluído com sucesso!')
     })
 
     it('Cancelando', () => {
       cy.get(':nth-child(1) > .text-right > .flex > .text-red-600 > .lucide').click()
-      cy.on('window:confirm', (msg) => {
-        expect(msg).to.equal('Tem certeza de que deseja excluir este produto?');
-        return false;
-      });
+      
+      cy.contains('button', 'Cancelar').click()
 
       cy.get('main.p-6')
       .should('contain', 'Laptop Dell XPS')

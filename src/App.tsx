@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <Index />
-    <Toaster position="top-right" /> 
+    <Toaster position="bottom-right" /> 
   </QueryClientProvider>
 );
 
