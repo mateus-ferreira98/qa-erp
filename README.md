@@ -50,6 +50,12 @@ Acompanhe a documentação dos testes:
 
 📌 Esses arquivos estão em constante atualização conforme avanço nos testes.
 
+## 📌 Atualizações e mudanças recentes
+
+As mudanças feitas no projeto — como correções de bugs, ajustes em testes ou novas funcionalidades — estão sendo documentadas separadamente no arquivo:
+
+- [`CHANGELOG.md`](CHANGELOG.md) – Registro cronológico das atualizações do sistema e dos testes
+
 ---
 
 ## 🐛 Bugs identificados (produtos)
