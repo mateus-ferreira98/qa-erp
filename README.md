@@ -33,9 +33,9 @@ Criar um ambiente funcional de um sistema ERP para simular cenários reais de QA
 Atualmente estou desenvolvendo testes funcionais e automatizados para as seguintes funcionalidades:
 
 - 📦 Gestão de Produtos (concluído)
-- 📊 Painel de Dashboard (em andamento)
-- 🏢 Gestão de Fornecedores (em breve)
+- 🏢 Gestão de Fornecedores (concluído)
 - 🧾 Inventário de Estoques (em breve)
+- 📊 Painel de Dashboard (em andamento)
 
 Os arquivos de testes estão sendo organizados dentro da pasta `cypress/e2e/`.
 
