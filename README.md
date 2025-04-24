@@ -58,20 +58,6 @@ As mudanças feitas no projeto — como correções de bugs, ajustes em testes o
 
 ---
 
-## 🐛 Bugs identificados (produtos)
-
-Alguns pontos já identificados durante os testes:
-
-- ❌ Unidade de medida vindo como "UN" por padrão
-- ❌ Falta de toast (notificação) ao adicionar produto
-- ❌ Permite cadastro sem informar estoque atual
-- ❌ Campos numéricos sem formatação adequada
-- ❌ Falta de toast ao excluir produto
-
-> Todos esses itens estão sendo registrados e tratados nos arquivos de bugs.
-
----
-
 ## 🛠️ Tecnologias utilizadas
 
 - [Vite](https://vitejs.dev/)
