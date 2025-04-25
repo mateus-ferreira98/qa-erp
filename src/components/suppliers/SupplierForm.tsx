@@ -37,12 +37,168 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
     }
   }, [mode, id, state.suppliers]);
 
+  // Função para formatar o CNPJ
+  const maskCNPJ = (value: string): string => {
+    // Remove todos os caracteres não numéricos
+    const cnpjOnly = value.replace(/\D/g, '');
+    
+    // Limita a 14 dígitos
+    const cnpjLimited = cnpjOnly.slice(0, 14);
+    
+    // Aplica a formatação de CNPJ: XX.XXX.XXX/XXXX-XX
+    let maskedCNPJ = '';
+    
+    if (cnpjLimited.length > 0) {
+      maskedCNPJ = cnpjLimited.replace(
+        /^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2}).*/, 
+        (_, p1, p2, p3, p4, p5) => {
+          let result = '';
+          if (p1) result += p1;
+          if (p2) result += (p1 ? '.' : '') + p2;
+          if (p3) result += (p2 ? '.' : '') + p3;
+          if (p4) result += (p3 ? '/' : '') + p4;
+          if (p5) result += (p4 ? '-' : '') + p5;
+          return result;
+        }
+      );
+    }
+    
+    return maskedCNPJ;
+  };
+
+  // Função para validar o CNPJ
+  const validateCNPJ = (cnpj: string): boolean => {
+    // Remove caracteres não numéricos para validação
+    const cnpjClean = cnpj.replace(/\D/g, '');
+    
+    // Verifica se tem 14 dígitos
+    if (cnpjClean.length !== 14) {
+      return false;
+    }
+    
+    // Verifica se todos os dígitos são iguais
+    if (/^(\d)\1+$/.test(cnpjClean)) {
+      return false;
+    }
+    
+    // Algoritmo de validação do CNPJ
+    let size = cnpjClean.length - 2;
+    let numbers = cnpjClean.substring(0, size);
+    const digits = cnpjClean.substring(size);
+    let sum = 0;
+    let pos = size - 7;
+    
+    for (let i = size; i >= 1; i--) {
+      sum += parseInt(numbers.charAt(size - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    
+    let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+    if (result !== parseInt(digits.charAt(0))) {
+      return false;
+    }
+    
+    size += 1;
+    numbers = cnpjClean.substring(0, size);
+    sum = 0;
+    pos = size - 7;
+    
+    for (let i = size; i >= 1; i--) {
+      sum += parseInt(numbers.charAt(size - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    
+    result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+    if (result !== parseInt(digits.charAt(1))) {
+      return false;
+    }
+    
+    return true;
+  };
+
+  const validatePhone = (phone: string): boolean => {
+    // Remove todos os caracteres não numéricos
+    const phoneClean = phone.replace(/\D/g, '');
+    
+    // Verifica se o telefone tem 10 (fixo) ou 11 (celular) dígitos
+    if (phoneClean.length < 10 || phoneClean.length > 11) {
+      return false;
+    }
+    
+    // Valida o DDD (considera códigos de área válidos no Brasil - entre 11 e 99)
+    const ddd = parseInt(phoneClean.substring(0, 2));
+    if (ddd < 11 || ddd > 99) {
+      return false;
+    }
+    
+    // Se for celular (11 dígitos), o primeiro dígito após o DDD deve ser 9
+    if (phoneClean.length === 11 && phoneClean.charAt(2) !== '9') {
+      return false;
+    }
+    
+    // Verifica se não são todos dígitos iguais (como 11111111111)
+    if (/^(\d)\1+$/.test(phoneClean)) {
+      return false;
+    }
+    
+    return true;
+  };
+
+  // Máscara para telefone
+  const maskPhone = (value: string): string => {
+    // Remove todos os caracteres não numéricos
+    const phoneOnly = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos (DDD + número)
+    const phoneLimited = phoneOnly.slice(0, 11);
+    
+    // Aplica a formatação de telefone: (XX) XXXXX-XXXX
+    let maskedPhone = '';
+    
+    if (phoneLimited.length > 0) {
+      maskedPhone = phoneLimited.replace(
+        /^(\d{0,2})(\d{0,5})(\d{0,4}).*/, 
+        (_, ddd, prefix, suffix) => {
+          let result = '';
+          if (ddd) result += `(${ddd}`;
+          if (prefix) result += (ddd ? ') ' : '(') + prefix;
+          if (suffix) result += (prefix ? '-' : '') + suffix;
+          return result;
+        }
+      );
+    }
+    
+    return maskedPhone;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Aplica máscara apropriada com base no nome do campo
+    if (name === 'cnpj') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: maskCNPJ(value)
+      }));
+    } else if (name === 'phone') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: maskPhone(value)
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+    
+    // Remove erros ao digitar
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const validate = (): boolean => {
@@ -54,12 +210,20 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
     
     if (!formData.cnpj.trim()) {
       newErrors.cnpj = 'CNPJ é obrigatório';
+    } else if (!validateCNPJ(formData.cnpj)) {
+      newErrors.cnpj = 'CNPJ inválido';
     }
     
     if (!formData.email.trim()) {
       newErrors.email = 'O e-mail é obrigatório';
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
       newErrors.email = 'O e-mail é inválido';
+    }
+
+    if (formData.phone.trim()) {
+      if (!validatePhone(formData.phone)) {
+        newErrors.phone = 'Telefone inválido';
+      }
     }
     
     setErrors(newErrors);
@@ -93,7 +257,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
             createdAt: existingSupplier.createdAt
           }
         });
-        toast.success('Produto atualizado com sucesso!');
+        toast.success('Fornecedor atualizado com sucesso!');
         navigate('/suppliers');
       }
     }
@@ -171,6 +335,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
               placeholder="(XX) XXXXX-XXXX"
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
+            {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
           </div>
         </div>
         
