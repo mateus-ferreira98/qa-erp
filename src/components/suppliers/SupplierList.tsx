@@ -1,15 +1,18 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDatabase } from '@/contexts/DatabaseContext';
 import { Supplier } from '@/types';
 import { formatDate } from '@/utils/format';
 import { Users, Edit, Trash } from 'lucide-react';
+import ConfirmModal from '../modal/ConfirmModal';
+import toast from 'react-hot-toast';
 
 const SupplierList: React.FC = () => {
   const { state, dispatch } = useDatabase();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [supplierToDelete, setSupplierToDelete] = useState<number | null>(null);
 
   // Filter suppliers based on search query
   const filteredSuppliers = state.suppliers.filter((supplier) =>
@@ -20,8 +23,16 @@ const SupplierList: React.FC = () => {
 
   // Handle delete supplier
   const handleDelete = (id: number) => {
-    if (window.confirm('Tem certeza de que deseja excluir este fornecedor?')) {
-      dispatch({ type: 'DELETE_SUPPLIER', payload: id });
+    setSupplierToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (supplierToDelete !== null) {
+      dispatch({ type: 'DELETE_SUPPLIER', payload: supplierToDelete });
+      toast.success('Fornecedor excluído com sucesso!');
+      setSupplierToDelete(null);
+      setIsModalOpen(false);
     }
   };
 
@@ -82,6 +93,17 @@ const SupplierList: React.FC = () => {
           </tbody>
         </table>
       </div>
+
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Confirmar exclusão">
+        <p>
+          Deseja realmente excluir o fornecedor?<br />
+          Essa ação não poderá ser desfeita.
+        </p>
+      </ConfirmModal>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDatabase } from '@/contexts/DatabaseContext';
 import { Supplier } from '@/types';
+import toast from 'react-hot-toast';
 
 interface SupplierFormProps {
   mode: 'create' | 'edit';
@@ -77,6 +78,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
         type: 'ADD_SUPPLIER',
         payload: formData
       });
+      toast.success('Fornecedor criado com sucesso!');
       navigate('/suppliers');
     } else if (mode === 'edit' && id) {
       const supplierId = Number(id);
@@ -91,6 +93,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
             createdAt: existingSupplier.createdAt
           }
         });
+        toast.success('Produto atualizado com sucesso!');
         navigate('/suppliers');
       }
     }
