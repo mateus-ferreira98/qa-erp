@@ -66,83 +66,19 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
     return maskedCNPJ;
   };
 
-  // Função para validar o CNPJ
-  const validateCNPJ = (cnpj: string): boolean => {
-    // Remove caracteres não numéricos para validação
-    const cnpjClean = cnpj.replace(/\D/g, '');
-    
-    // Verifica se tem 14 dígitos
-    if (cnpjClean.length !== 14) {
-      return false;
-    }
-    
-    // Verifica se todos os dígitos são iguais
-    if (/^(\d)\1+$/.test(cnpjClean)) {
-      return false;
-    }
-    
-    // Algoritmo de validação do CNPJ
-    let size = cnpjClean.length - 2;
-    let numbers = cnpjClean.substring(0, size);
-    const digits = cnpjClean.substring(size);
-    let sum = 0;
-    let pos = size - 7;
-    
-    for (let i = size; i >= 1; i--) {
-      sum += parseInt(numbers.charAt(size - i)) * pos--;
-      if (pos < 2) pos = 9;
-    }
-    
-    let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-    if (result !== parseInt(digits.charAt(0))) {
-      return false;
-    }
-    
-    size += 1;
-    numbers = cnpjClean.substring(0, size);
-    sum = 0;
-    pos = size - 7;
-    
-    for (let i = size; i >= 1; i--) {
-      sum += parseInt(numbers.charAt(size - i)) * pos--;
-      if (pos < 2) pos = 9;
-    }
-    
-    result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-    if (result !== parseInt(digits.charAt(1))) {
-      return false;
-    }
-    
-    return true;
-  };
+  
+const validateCNPJ = (cnpj: string): boolean => {
+  // Remove caracteres não numéricos e verifica se tem 14 dígitos
+  const cnpjClean = cnpj.replace(/\D/g, '');
+  return cnpjClean.length === 14;
+};
 
-  const validatePhone = (phone: string): boolean => {
-    // Remove todos os caracteres não numéricos
-    const phoneClean = phone.replace(/\D/g, '');
-    
-    // Verifica se o telefone tem 10 (fixo) ou 11 (celular) dígitos
-    if (phoneClean.length < 10 || phoneClean.length > 11) {
-      return false;
-    }
-    
-    // Valida o DDD (considera códigos de área válidos no Brasil - entre 11 e 99)
-    const ddd = parseInt(phoneClean.substring(0, 2));
-    if (ddd < 11 || ddd > 99) {
-      return false;
-    }
-    
-    // Se for celular (11 dígitos), o primeiro dígito após o DDD deve ser 9
-    if (phoneClean.length === 11 && phoneClean.charAt(2) !== '9') {
-      return false;
-    }
-    
-    // Verifica se não são todos dígitos iguais (como 11111111111)
-    if (/^(\d)\1+$/.test(phoneClean)) {
-      return false;
-    }
-    
-    return true;
-  };
+// Função simplificada para validar telefone - apenas verifica se tem 10 ou 11 dígitos
+const validatePhone = (phone: string): boolean => {
+  // Remove caracteres não numéricos e verifica se tem 10 ou 11 dígitos
+  const phoneClean = phone.replace(/\D/g, '');
+  return phoneClean.length === 10 || phoneClean.length === 11;
+};
 
   // Máscara para telefone
   const maskPhone = (value: string): string => {
@@ -211,7 +147,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
     if (!formData.cnpj.trim()) {
       newErrors.cnpj = 'CNPJ é obrigatório';
     } else if (!validateCNPJ(formData.cnpj)) {
-      newErrors.cnpj = 'CNPJ inválido';
+      newErrors.cnpj = 'CNPJ deve ter 14 dígitos';
     }
     
     if (!formData.email.trim()) {
@@ -220,10 +156,8 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ mode }) => {
       newErrors.email = 'O e-mail é inválido';
     }
 
-    if (formData.phone.trim()) {
-      if (!validatePhone(formData.phone)) {
-        newErrors.phone = 'Telefone inválido';
-      }
+    if (formData.phone.trim() && !validatePhone(formData.phone)) {
+      newErrors.phone = 'Telefone deve ter 10 ou 11 dígitos';
     }
     
     setErrors(newErrors);

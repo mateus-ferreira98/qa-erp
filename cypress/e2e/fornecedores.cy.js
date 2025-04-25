@@ -66,9 +66,9 @@ describe('Fornececdores', () => {
               .should('exist', `Inclua um "@" no endereço de e-mail. "${email} está com um "@" faltando."`)
         })
 
-        it('Adicionar telefone sem máscara', () => {
+        it.only('Adicionar telefone sem máscara', () => {
             cy.get('#name').type('Exemplo02 LTDA')
-            cy.get('#cnpj').type('35.124.128/002-61')
+            cy.get('#cnpj').type('35.124.128/0026-12')
             cy.get('#email').type('email@email.com')
             cy.get('#phone').type('62999999999')
 
@@ -82,7 +82,7 @@ describe('Fornececdores', () => {
             cy.get('#name').type('Exemplo03 LTDA')
             cy.get('#cnpj').type('35.124.128/002-61')
             cy.get('#email').type('email@email.com')
-            cy.get('#phone').type('a')
+            cy.get('#phone').type('333')
 
             cy.contains('button', 'Criar fornecedor').click()
 
