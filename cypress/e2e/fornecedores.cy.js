@@ -37,7 +37,9 @@ describe('Fornececdores', () => {
 
             cy.get('main.p-6')
               .should('contain', 'Amazon LTDA')
-
+            
+            cy.contains('Fornecedor criado com sucesso!')
+              .should('be.visible')
         })
 
         it('Adicionar CNPJ sem mascara', () => {
@@ -134,7 +136,10 @@ describe('Fornececdores', () => {
             
             cy.get('main.p-6')
               .should('contain', 'Atualizado LTDA')
-              .and('contain', '35.124.128/0022-62')          
+              .and('contain', '35.124.128/0022-62')
+              
+            cy.contains('Fornecedor atualizado com sucesso!')
+            .should('be.visible')  
         })
     })
 
