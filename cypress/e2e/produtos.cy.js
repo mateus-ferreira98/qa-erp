@@ -137,15 +137,16 @@ describe('Produtos', () => {
   describe('Pesquisa', () => {
     it('Pesquisando um produto válido', () => {
       cy.get('.mt-4 > .w-full').type('Laptop')
-      cy.get('main.p-6')
-        .should('contain', 'Laptop Dell XPS')
-        .and('be.visible')
+
+      cy.contains('Laptop Dell XPS')
+        .should('be.visible')
     })
 
     it('Pesquisando um produto não válido', () => {
       cy.get('.mt-4 > .w-full').type('produto não existente')
-      cy.get('main.p-6')
-        .should('contain', 'Nenhum produto encontrado')
+
+      cy.contains('Nenhum produto encontrado')
+        .should('be.visible')
     })
   })
 })

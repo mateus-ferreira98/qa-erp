@@ -162,4 +162,20 @@ describe('Fornececdores', () => {
             .should('contain', 'Tech Solutions Inc')
           })
     })
+
+    describe('Pesquisa', () => {
+      it('Pesquisando um fornecedor válido', () => {
+        cy.get('.mt-4 > .w-full').type('Tech')
+        
+        cy.contains('Tech Solutions Inc')
+          .should('be.visible')
+      })
+  
+      it('Pesquisando um fornecedor não existente', () => {
+        cy.get('.mt-4 > .w-full').type('fornecedor não existente')
+
+        cy.contains('Nenhum fornecedor encontrado')
+          .should('be.visible')
+      })
+    })
 })
