@@ -15,17 +15,17 @@ describe('Produtos', () => {
   
       cy.contains('button', 'Criar produto').click()
   
-      cy.get('[data-component-line="169"] > .text-red-600')
-        .should('contain', 'O nome do produto é obrigatório')
+      cy.contains('O nome do produto é obrigatório')
+      .should('be.visible')
+      
+      cy.contains('O preço deve ser maior que 0')
+      .should('be.visible')
 
-      cy.get('[data-component-line="201"] > .text-red-600')
-        .should('contain', 'O preço deve ser maior que 0')
+      cy.contains('A unidade de medida é obrigatória')
+      .should('be.visible')
 
-      cy.get('[data-component-line="223"] > .text-red-600')
-        .should('contain', 'A unidade de medida é obrigatória')
-
-      cy.get('[data-component-line="247"] > .text-red-600')
-        .should('contain', 'O estoque atual deve ser maior que 0')
+      cy.contains('O estoque atual deve ser maior que 0')
+      .should('be.visible')
     })
 
     it('Adicionar produto válido', () => {
@@ -39,7 +39,8 @@ describe('Produtos', () => {
       cy.get('#minimumStock').clear().type(3)
   
       cy.contains('button', 'Criar produto').click()
-      cy.get('.go2072408551').should('contain', 'Produto criado com sucesso!')
+      cy.contains('Produto criado com sucesso!')
+      .should('be.visible')
 
       cy.get('main.p-6')
         .should('contain', 'Samsung Celular Galaxy A16')
@@ -54,9 +55,9 @@ describe('Produtos', () => {
       cy.get('#unitOfMeasurement').select('Unidade (UN)')
   
       cy.contains('button', 'Criar produto').click()
-  
-      cy.get('[data-component-line="247"] > .text-red-600')
-        .should('contain', 'O estoque atual deve ser maior que 0')
+      
+      cy.contains('O estoque atual deve ser maior que 0')
+      .should('be.visible')
     })
   })
 
@@ -84,17 +85,17 @@ describe('Produtos', () => {
 
       cy.contains('button', 'Atualizar produto').click()
 
-      cy.get('[data-component-line="169"] > .text-red-600')
-        .should('contain', 'O nome do produto é obrigatório')
+      cy.contains('O nome do produto é obrigatório')
+      .should('be.visible')
+      
+      cy.contains('O preço deve ser maior que 0')
+      .should('be.visible')
 
-      cy.get('[data-component-line="201"] > .text-red-600')
-        .should('contain', 'O preço deve ser maior que 0')
+      cy.contains('A unidade de medida é obrigatória')
+      .should('be.visible')
 
-      cy.get('[data-component-line="223"] > .text-red-600')
-        .should('contain', 'A unidade de medida é obrigatória')
-
-      cy.get('[data-component-line="247"] > .text-red-600')
-        .should('contain', 'O estoque atual deve ser maior que 0')
+      cy.contains('O estoque atual deve ser maior que 0')
+      .should('be.visible')
     })
 
     it('Editando produtos com valores validos', () => {
@@ -108,8 +109,8 @@ describe('Produtos', () => {
         .should('contain', '1,350.00')
         .and('contain', '25')
       
-      cy.get('.go2072408551')
-        .should('contain', 'Produto atualizado com sucesso!')
+      cy.contains('Produto atualizado com sucesso!')
+        .should('be.visible')
     })
   })
 
@@ -119,8 +120,8 @@ describe('Produtos', () => {
       
       cy.contains('button', 'Confirmar').click()
 
-      cy.get('.go2072408551')
-        .should('contain', 'Produto excluído com sucesso!')
+      cy.contains('Produto excluído com sucesso!')
+        .should('be.visible')
     })
 
     it('Cancelando', () => {
@@ -138,7 +139,7 @@ describe('Produtos', () => {
       cy.get('.mt-4 > .w-full').type('Laptop')
       cy.get('main.p-6')
         .should('contain', 'Laptop Dell XPS')
-        .and('to.be.visible')
+        .and('be.visible')
     })
 
     it('Pesquisando um produto não válido', () => {
