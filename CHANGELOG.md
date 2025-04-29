@@ -1,5 +1,16 @@
 # Changelog
 
+## [28/04/2025]
+- [x] Criação dos testes automatizados de inventário entradas e saídas: 
+  - Entradas: [`inventario-entrada.spec.cy.js`](./cypress/e2e/inventario-entrada.cy.js) 
+  - Saídas: [`inventario-saida.spec.cy.js`](./cypress/e2e/inventario-saida.cy.js)
+- [x] Documentação dos casos de teste de inventário:
+  - Entradas: [`docs/caso-testes/ct-inventario-entrada.md`](./docs/caso-testes/ct-inventario-entrada.md)
+  - Saídas: [`docs/caso-testes/ct-inventario-saida.md`](./docs/caso-testes/ct-inventario-saida.md)
+- [x] Documentação dos bugs encontrados em inventário:
+  - Entradas: [`docs/bugs/bugs-inventario-entrada.md`](./docs/bugs/bugs-inventario-entrada.md)
+  - Saídas: [`docs/bugs/bugs-inventario-saida.md`](./docs/bugs/bugs-inventario-saida.md)
+
 ## [25/04/2025]
 - [x] Correção dos bugs listados em [`docs/bugs/bugs-fornecedores.md`](./docs/bugs/bugs-fornecedores.md)
 - [x] Atualizações nos testes Cypress: [`produtos.spec.cy.js`](./cypress/e2e/produtos.cy.js) e [`fornecedores.spec.cy.js`](./cypress/e2e/fornecedores.cy.js)
