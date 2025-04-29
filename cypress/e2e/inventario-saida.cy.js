@@ -57,9 +57,7 @@ describe('Inventário Saída Estoque', () => {
 
         cy.contains('Estoque Mínimo:').should('be.visible')
         cy.contains('5 UN').should('be.visible')
-    })
-
-    
+    }) 
 })
 
 describe('Fazendo pesquisas', () => {
@@ -73,10 +71,10 @@ describe('Fazendo pesquisas', () => {
         cy.visit('http://localhost:8080/inventory/outputs')    
     })
 
-    it.only('Fazendo uma pesquisa de oferta', () => {
+    it('Fazendo uma pesquisa de oferta', () => {
         cy.contains('button', 'Registrar nova saída').click()
 
-        cy.get('#productId').select('Laptop Dell XPS (UN) - In Stock: 15')
+        cy.get('#productId').select('Laptop Dell XPS (UN) - In Stock: 15')  
         cy.get('#outputType').select('Oferta')
         cy.get('#quantity').type(2)
         cy.get('#outputDate').type('2025-04-27')
