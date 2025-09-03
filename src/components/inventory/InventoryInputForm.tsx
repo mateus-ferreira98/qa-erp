@@ -62,12 +62,16 @@ const InventoryInputForm: React.FC = () => {
       newErrors.quantity = 'A quantidade deve ser maior que 0';
     }
     
-    if (formData.unitPrice < 0) {
-      newErrors.unitPrice = 'O preço não pode ser negativo';
+    if (formData.unitPrice <= 0) {
+      newErrors.unitPrice = 'O preço não pode ser menor que 1';
     }
     
     if (!formData.entryDate) {
       newErrors.entryDate = 'A data de entrada é obrigatória';
+    }
+
+    if (!formData.invoice) {
+      newErrors.invoice = 'O número da fatura é obrigatório';
     }
     
     setErrors(newErrors);
@@ -223,7 +227,7 @@ const InventoryInputForm: React.FC = () => {
           
           <div>
             <label htmlFor="invoice" className="block text-sm font-medium text-gray-700">
-               Número da fatura
+               Número da fatura *
             </label>
             <input
               type="text"
@@ -233,6 +237,7 @@ const InventoryInputForm: React.FC = () => {
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
+             {errors.invoice && <p className="mt-1 text-sm text-red-600">{errors.invoice}</p>}
           </div>
         </div>
         
