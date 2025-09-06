@@ -9,13 +9,13 @@ describe('Fornececdores', () => {
         cy.visit('http://localhost:8080/suppliers')
     })
 
-    describe('Adicionar Fornecedores', () => {
+    describe.only('Adicionar Fornecedores', () => {
         beforeEach(() => {
             cy.contains('button', 'Adicionar novo fornecedor').click()
         })
 
         it('Adicionar fornecedor vazio', () => {
-            cy.contains('button', 'Criar fornecedor').click()
+             cy.criarFornecedor({})
             
             cy.contains('O nome do fornecedor é obrigatório')
               .should('be.visible')
@@ -28,82 +28,82 @@ describe('Fornececdores', () => {
         })
 
         it('Adicionar fornecedor válido', () => {
-            cy.get('#name').type('Amazon LTDA')
-            cy.get('#cnpj').type('35.814.798/0001-62')
-            cy.get('#email').type('amazon@email.com')
-            cy.get('#phone').type('(62) 99999-9999')
+          cy.criarFornecedor({
+            nome: 'Amazon LTDA',
+            cnpj: '35.814.798/0001-62',
+            email: 'amazon@email.com',
+            telefone: '(62) 99999-9999'
+          })
 
-            cy.contains('button', 'Criar fornecedor').click()
-
-            cy.get('main.p-6')
-              .should('contain', 'Amazon LTDA')
+          cy.get('main.p-6')
+            .should('contain', 'Amazon LTDA')
             
-            cy.contains('Fornecedor criado com sucesso!')
-              .should('be.visible')
+          cy.contains('Fornecedor criado com sucesso!')
+            .should('be.visible')
         })
 
         it('Adicionar CNPJ sem mascara', () => {
-            cy.get('#name').type('Jogos LTDA')
-            cy.get('#cnpj').type('34104798000118')
-            cy.get('#email').type('jogos@email.com')
-            cy.get('#phone').type('(62) 99999-9999')
+          cy.criarFornecedor({
+            nome: 'Jogos LTDA',
+            cnpj: '34104798000118',
+            email: 'jogos@email.com',
+            telefone: '(62) 99999-9999'
+          })
 
-            cy.contains('button', 'Criar fornecedor').click()
-
-            cy.get('main.p-6')
-              .should('contain', '34.104.798/0001-18')
+          cy.get('main.p-6')
+            .should('contain', '34.104.798/0001-18')
         })
 
         it('Adicionar e-mail faltando @', () => {
-            const email = 'exemploemail.com'
+          const emailFaltando = 'exemploemail.com'
 
-            cy.get('#name').type('Exemplo LTDA')
-            cy.get('#cnpj').type('35.124.128/002-62')
-            cy.get('#email').type(email)
-            cy.get('#phone').type('(62) 99999-9999')
+          cy.criarFornecedor({
+            nome: 'Exemplo LTDA',
+            cnpj: '35104718000118',
+            email: emailFaltando,
+            telefone: '(62) 99999-9999'
+          })
 
-            cy.contains('button', 'Criar fornecedor').click()
-
-            cy.get('main.p-6')
-              .should('exist', `Inclua um "@" no endereço de e-mail. "${email} está com um "@" faltando."`)
+          cy.get('main.p-6')
+            .should('exist', `Inclua um "@" no endereço de e-mail. "${emailFaltando} está com um "@" faltando."`)
         })
 
         it('Adicionar e-mail inválido', () => {
-          cy.get('#name').type('Exemplo LTDA')
-          cy.get('#cnpj').type('35.124.128/0022-62')
-          cy.get('#email').type('exemplo@email')
-          cy.get('#phone').type('(62) 99999-9999')
-
-          cy.contains('button', 'Criar fornecedor').click()
-
-          cy.contains('O e-mail é inválido')
-            .should('be.visible')
-      })
+            cy.criarFornecedor({
+              nome: 'Exemplo LTDA',
+              cnpj: '35104718000118',
+              email: 'exemplo@email',
+              telefone: '(62) 99999-9999'
+            })
+   
+            cy.contains('O e-mail é inválido')
+              .should('be.visible')
+        })
 
         it('Adicionar telefone sem máscara', () => {
-            cy.get('#name').type('Exemplo02 LTDA')
-            cy.get('#cnpj').type('35.124.128/0026-12')
-            cy.get('#email').type('email@email.com')
-            cy.get('#phone').type('62999999999')
-
-            cy.contains('button', 'Criar fornecedor').click()
+            cy.criarFornecedor({
+              nome: 'Exemplo02 LTDA',
+              cnpj: '35.124.128/0026-12',
+              email: 'email@email.com',
+              telefone: '62999999999'
+            })
 
             cy.get('main.p-6')
             .should('contain', '(62) 99999-9999')
         })
 
         it('Adicionar telefone inválido', () => {
-            cy.get('#name').type('Exemplo03 LTDA')
-            cy.get('#cnpj').type('35.124.128/0022-12')
-            cy.get('#email').type('email@email.com')
-            cy.get('#phone').type('333')
-
-            cy.contains('button', 'Criar fornecedor').click()
+             cy.criarFornecedor({
+              nome: 'Exemplo02 LTDA',
+              cnpj: '35.124.128/0026-12',
+              email: 'email@email.com',
+              telefone: '333'
+            })
 
             cy.contains('Telefone deve ter 10 ou 11 dígitos')
               .should('be.visible')
         })
-    })
+      })
 
     describe('Editar fornecedor', () => {
         beforeEach(() => {
@@ -111,12 +111,7 @@ describe('Fornececdores', () => {
         })
 
         it('Editar fornecedor vazio', () => {
-            cy.get('#name').clear()
-            cy.get('#cnpj').clear()
-            cy.get('#email').clear()
-            cy.get('#phone').clear()
-
-            cy.contains('button', 'Atualizar fornecedor').click()
+            cy.editarFornecedor()
             
             cy.contains('O nome do fornecedor é obrigatório')
               .should('be.visible')
@@ -129,11 +124,11 @@ describe('Fornececdores', () => {
         })
 
         it('Editar fornecedor válido', () => {
-            cy.get('#name').clear().type('Atualizado LTDA')
-            cy.get('#cnpj').clear().type('35.124.128/0022-62')
+            cy.editarFornecedor(
+              'Atualizado LTDA',
+              '35.124.128/0022-62'
+            )
 
-            cy.contains('button', 'Atualizar fornecedor').click()
-            
             cy.get('main.p-6')
               .should('contain', 'Atualizado LTDA')
               .and('contain', '35.124.128/0022-62')

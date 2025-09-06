@@ -10,52 +10,52 @@ describe('Produtos', () => {
   })
 
   describe('Adicionar Produtos', () => {
-    it('Adicionar produto vazio', () => {
-      cy.contains('button', 'Adicionar novo produto').click()
-  
-      cy.contains('button', 'Criar produto').click()
-  
+    beforeEach(() => {
+          cy.contains('button', 'Adicionar novo produto').click()
+      })
+
+    it.only('Adicionar produto vazio', () => {
+      cy.criarProduto({})
+
       cy.contains('O nome do produto é obrigatório')
-      .should('be.visible')
+        .should('be.visible')
       
       cy.contains('O preço deve ser maior que 0')
-      .should('be.visible')
+        .should('be.visible')
 
       cy.contains('A unidade de medida é obrigatória')
-      .should('be.visible')
+        .should('be.visible')
 
       cy.contains('O estoque atual deve ser maior que 0')
-      .should('be.visible')
+        .should('be.visible')
     })
 
     it('Adicionar produto válido', () => {
-      cy.contains('button', 'Adicionar novo produto').click()
-  
-      cy.get('#name').type('Samsung Celular Galaxy A16')
-      cy.get('#description').type('256GB + 8GB RAM, Câmera de até 50MP, Tela 6.7", NFC, IP54, Bateria 5000 mAh (Cinza)')
-      cy.get('#unitPrice').type(1159)
-      cy.get('#unitOfMeasurement').select('Unidade (UN)')
-      cy.get('#currentStock').clear().type(10)
-      cy.get('#minimumStock').clear().type(3)
-  
-      cy.contains('button', 'Criar produto').click()
+      cy.criarProduto({
+        nome: 'Teclado Mecânico',
+        descricao: 'Switch Blue',
+        preco: 200,
+        unidade: 'Unidade (UN)',
+        estoqueAtual: 5,
+        estoqueMinimo: 1
+      })
+
       cy.contains('Produto criado com sucesso!')
-      .should('be.visible')
+      .should('be.visible') 
 
       cy.get('main.p-6')
-        .should('contain', 'Samsung Celular Galaxy A16')
+        .should('contain', 'Teclado Mecânico')
     })
      
-    it('Adicionar produto sem passar estoque atual', () => {
-      cy.contains('button', 'Adicionar novo produto').click()
-  
-      cy.get('#name').type('Fone de Ouvido Bluetooth 5.3')
-      cy.get('#description').type('Tipo USB C Fone de Ouvido Sem Fio com Microfone, Earphone Sem Fio Bluetooth')
-      cy.get('#unitPrice').type(64)
-      cy.get('#unitOfMeasurement').select('Unidade (UN)')
-  
-      cy.contains('button', 'Criar produto').click()
-      
+    it('Adicionar produto sem passar estoque atual', () => {  
+      cy.criarProduto({
+        nome: 'Mouse Gamer',
+        descricao: 'Razer',
+        preco: 250,
+        unidade: 'Unidade (UN)',
+        estoqueMinimo: 1
+      })
+
       cy.contains('O estoque atual deve ser maior que 0')
       .should('be.visible')
     })
