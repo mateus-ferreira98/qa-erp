@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDatabase } from '@/contexts/DatabaseContext';
 import { formatCurrency } from '@/utils/format';
+import toast from 'react-hot-toast';
 
 const InventoryInputForm: React.FC = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const InventoryInputForm: React.FC = () => {
   const [formData, setFormData] = useState({
     productId: '',
     supplierId: '',
-    quantity: 1,
+    quantity: '',
     unitPrice: 0,
     entryDate: new Date().toISOString().split('T')[0],
     invoice: '',
@@ -26,7 +27,7 @@ const InventoryInputForm: React.FC = () => {
     if (['quantity', 'unitPrice'].includes(name)) {
       setFormData(prev => ({
         ...prev,
-        [name]: value === '' ? 0 : Number(value)
+        [name]: value
       }));
     } else {
       setFormData(prev => ({
@@ -58,7 +59,7 @@ const InventoryInputForm: React.FC = () => {
       newErrors.supplierId = 'O fornecedor é obrigatório';
     }
     
-    if (formData.quantity <= 0) {
+    if (Number(formData.quantity) <= 0) {
       newErrors.quantity = 'A quantidade deve ser maior que 0';
     }
     
@@ -90,7 +91,7 @@ const InventoryInputForm: React.FC = () => {
       payload: {
         productId: Number(formData.productId),
         supplierId: Number(formData.supplierId),
-        quantity: formData.quantity,
+        quantity: Number(formData.quantity),
         unitPrice: formData.unitPrice,
         entryDate: new Date(formData.entryDate),
         invoice: formData.invoice,
@@ -98,11 +99,12 @@ const InventoryInputForm: React.FC = () => {
       }
     });
     
+    toast.success('Entradas de estoque criado com sucesso!');
     navigate('/inventory/inputs');
   };
 
   // Calculate total cost
-  const totalCost = formData.quantity * formData.unitPrice;
+  const totalCost = Number(formData.quantity) * formData.unitPrice;
 
   return (
     <div className="bg-white rounded-lg shadow">
@@ -168,7 +170,6 @@ const InventoryInputForm: React.FC = () => {
               type="number"
               id="quantity"
               name="quantity"
-              min="1"
               value={formData.quantity}
               onChange={handleChange}
               className={`mt-1 block w-full border ${errors.quantity ? 'border-red-300' : 'border-gray-300'} rounded-md shadow-sm p-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}

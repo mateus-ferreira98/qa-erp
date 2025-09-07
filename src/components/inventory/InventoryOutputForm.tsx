@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDatabase } from '@/contexts/DatabaseContext';
 import { OutputType } from '@/types';
+import toast from 'react-hot-toast';
 
 const InventoryOutputForm: React.FC = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const InventoryOutputForm: React.FC = () => {
   
   const [formData, setFormData] = useState({
     productId: '',
-    quantity: 1,
+    quantity: '',
     outputType: 'SALE' as OutputType,
     outputDate: new Date().toISOString().split('T')[0],
     observation: '',
@@ -23,7 +24,7 @@ const InventoryOutputForm: React.FC = () => {
     if (name === 'quantity') {
       setFormData(prev => ({
         ...prev,
-        quantity: value === '' ? 0 : Number(value)
+        quantity: value
       }));
     } else if (name === 'outputType') {
       setFormData(prev => ({
@@ -45,14 +46,14 @@ const InventoryOutputForm: React.FC = () => {
       newErrors.productId = 'O produto é obrigatório';
     }
     
-    if (formData.quantity <= 0) {
+    if (Number(formData.quantity) <= 0) {
       newErrors.quantity = 'A quantidade deve ser maior que 0';
     }
     
     // Check if there's enough stock
-    if (formData.productId && formData.quantity > 0) {
+    if (formData.productId && Number(formData.quantity) > 0) {
       const product = state.products.find(p => p.id === Number(formData.productId));
-      if (product && product.currentStock < formData.quantity) {
+      if (product && product.currentStock < Number(formData.quantity)) {
         newErrors.quantity = `Estoque insuficiente. Disponível: ${product.currentStock}`;
       }
     }
@@ -76,13 +77,14 @@ const InventoryOutputForm: React.FC = () => {
       type: 'ADD_INVENTORY_OUTPUT',
       payload: {
         productId: Number(formData.productId),
-        quantity: formData.quantity,
+        quantity: Number(formData.quantity),
         outputType: formData.outputType,
         outputDate: new Date(formData.outputDate),
         observation: formData.observation,
       }
     });
     
+    toast.success('Saídas de estoque criado com sucesso!');
     navigate('/inventory/outputs');
   };
 
