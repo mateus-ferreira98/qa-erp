@@ -15,12 +15,7 @@ describe('Fornececdores', () => {
         })
 
         it('Adicionar fornecedor vazio', () => {
-            cy.criarFornecedor({
-              nome: '',
-              cnpj: '',
-              email: '',
-              telefone: ''
-            })  
+            cy.criarFornecedor({})  
                     
             cy.contains('O nome do fornecedor é obrigatório').should('be.visible')
             cy.contains('CNPJ é obrigatório').should('be.visible')
@@ -104,7 +99,12 @@ describe('Fornececdores', () => {
         })
 
         it('Editar fornecedor vazio', () => {
-            cy.editarFornecedor({})
+            cy.editarFornecedor({
+              nome: '',
+              cnpj: '',
+              email: '',
+              telefone: ''
+            })
             
             cy.contains('O nome do fornecedor é obrigatório').should('be.visible')
             cy.contains('CNPJ é obrigatório').should('be.visible')
