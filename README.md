@@ -12,7 +12,7 @@ Criar um ambiente funcional de um sistema ERP para simular cenários reais de QA
 
 - ✅ **Cypress** (Testes automatizados de interface)
 - ✅ **Postman** (Testes de API)
-- 🚧 **Artillery** ou **k6** (Testes de performance) — *em breve*
+- 🚧 **Artillery** ou **k6** (Testes de performance) — *em andamento*
 - ✅ **Testes manuais com plano de testes**
 
 ---
@@ -34,7 +34,7 @@ Atualmente estou desenvolvendo testes funcionais e automatizados para as seguint
 
 - 📦 Gestão de Produtos (concluído)
 - 🏢 Gestão de Fornecedores (concluído)
-- 🧾 Inventário de Estoques (em breve)
+- 🧾 Inventário de Estoques (concluído)
 - 📊 Painel de Dashboard (em andamento)
 
 Os arquivos de testes estão sendo organizados dentro da pasta `cypress/e2e/`.
