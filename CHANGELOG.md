@@ -1,5 +1,11 @@
 # Changelog
 
+## [07/09/2025]
+- [x] Refatoração dos testes de usando comandos customizados.
+- [x] Correção dos bugs em inventário:
+    - Entradas: mensagens de erro em campos obrigatórios, toast de sucesso, validação de quantidade e cálculo do custo total.
+    - Saídas: mensagens de erro em campos obrigatórios, toast de sucesso, validação de quantidade, pesquisa de saídas cadastradas e mensagens para produtos inexistentes.
+
 ## [28/04/2025]
 - [x] Criação dos testes automatizados de inventário entradas e saídas: 
   - Entradas: [`inventario-entrada.spec.cy.js`](./cypress/e2e/inventario-entrada.cy.js) 
