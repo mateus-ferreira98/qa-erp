@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - main      
+      - main
   pull_request:
 
 jobs:
@@ -24,10 +24,14 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Start application in background
-        run: npm start &
+      - name: Start dev server in background
+        run: npm run dev &
 
-      - name: Run Cypress tests
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:8081
+
+      - name: Run Cypress tests headless
         run: npx cypress run
+
 
         
