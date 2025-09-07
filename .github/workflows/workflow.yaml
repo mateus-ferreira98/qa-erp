@@ -1,0 +1,29 @@
+name: Continuous Integration
+
+on: [pull_request]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start application in background
+        run: npm start &
+
+      - name: Run Cypress tests
+        run: npx cypress run
+
+        
