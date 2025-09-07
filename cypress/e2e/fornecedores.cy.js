@@ -40,12 +40,12 @@ describe('Fornececdores', () => {
           cy.contains('Fornecedor criado com sucesso!').should('be.visible')
         })
 
-        it.only('Adicionar CNPJ sem mascara', () => {
+        it('Adicionar CNPJ sem mascara', () => {
           cy.criarFornecedor({
             nome: 'Jogos LTDA',
             cnpj: '34104798000118',
             email: 'jogos@email.com',
-            telefone: '(62) 99999-99999'
+            telefone: '(62) 99999-9999'
           })
 
           cy.get('main.p-6').should('contain', '34.104.798/0001-18')
