@@ -51,7 +51,7 @@ describe('Produtos', () => {
     })
   })
 
-  describe.only('Editar produtos', () => {
+  describe('Editar produtos', () => {
       beforeEach(() => {
         cy.get(':nth-child(1) > .text-right > .flex > .text-blue-600 > .lucide').click()
       })
@@ -66,7 +66,14 @@ describe('Produtos', () => {
     })
 
     it('Editar produtos vazios', () => {
-      cy.editarProduto({})
+      cy.editarProduto({
+          nome: '',
+          descricao: '',
+          preco: '',
+          unidade: '',
+          estoqueAtual: '',
+          estoqueMinimo: ''
+      })
 
       cy.contains('O nome do produto é obrigatório').should('be.visible')
       cy.contains('O preço deve ser maior que 0').should('be.visible')
@@ -74,7 +81,7 @@ describe('Produtos', () => {
       cy.contains('O estoque atual deve ser maior que 0').should('be.visible')
     })
 
-    it.only('Editando produtos com valores validos', () => {
+    it('Editando produtos com valores validos', () => {
         cy.editarProduto({
           preco: '1,350.00',
           estoqueAtual: 25

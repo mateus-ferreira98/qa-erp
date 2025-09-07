@@ -25,8 +25,7 @@ const InventoryInputList: React.FC = () => {
   // Filter records based on search query
   const filteredRecords = inventoryInputRecords.filter((record) =>
     record.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    record.supplierName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    record.invoice.toLowerCase().includes(searchQuery.toLowerCase())
+    record.supplierName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Sort by date (newest first)

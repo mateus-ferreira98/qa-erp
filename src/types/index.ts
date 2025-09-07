@@ -40,7 +40,7 @@ export type InventoryInput = {
   quantity: number;
   unitPrice: number;
   entryDate: Date;
-  invoice: string;
+  invoice: number;
   observation: string;
 };
 

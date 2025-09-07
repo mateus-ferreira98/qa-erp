@@ -24,7 +24,7 @@ const InventoryInputForm: React.FC = () => {
     const { name, value } = e.target;
     
     // Convert numeric values
-    if (['quantity', 'unitPrice'].includes(name)) {
+    if (['quantity', 'unitPrice', 'invoice'].includes(name)) {
       setFormData(prev => ({
         ...prev,
         [name]: value
@@ -94,7 +94,7 @@ const InventoryInputForm: React.FC = () => {
         quantity: Number(formData.quantity),
         unitPrice: formData.unitPrice,
         entryDate: new Date(formData.entryDate),
-        invoice: formData.invoice,
+        invoice: Number(formData.invoice),
         observation: formData.observation,
       }
     });
@@ -231,7 +231,7 @@ const InventoryInputForm: React.FC = () => {
                Número da fatura *
             </label>
             <input
-              type="text"
+              type="number"
               id="invoice"
               name="invoice"
               value={formData.invoice}

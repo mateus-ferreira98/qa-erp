@@ -1,33 +1,34 @@
 
 // Utility functions for formatting data
 
-// Format currency values
+// Formatar moeda em Reais (BRL)
 export const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'BRL',
   }).format(value);
 };
 
-// Format dates
+// Formatar data completa com hora
 export const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('pt-BR', {
     year: 'numeric',
-    month: 'short',
+    month: 'long', // ex.: janeiro
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   }).format(date);
 };
 
-// Format short date (no time)
+// Formatar data curta (sem hora)
 export const formatShortDate = (date: Date): string => {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('pt-BR', {
     year: 'numeric',
-    month: 'short',
-    day: 'numeric',
+    month: '2-digit', // ex.: 07
+    day: '2-digit',
   }).format(date);
 };
+
 
 // Generate a unique ID (for local use only)
 export const generateId = (): number => {

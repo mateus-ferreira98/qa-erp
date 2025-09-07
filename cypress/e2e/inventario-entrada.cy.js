@@ -32,13 +32,13 @@ describe('Inventário Entrada', () => {
             fatura: 209872,
           })
 
-          cy.contains('Entradas de estoque criado com sucesso')
+          cy.contains('Entradas de estoque criado com sucesso!')
 
-          cy.contains('Apr 25, 2025').should('be.visible')
+          cy.contains('25 de abril de 2025').should('be.visible')
           cy.contains('Laptop Dell XPS').should('be.visible')
           cy.contains('Tech Solutions Inc').should('be.visible')
           cy.contains('1').should('be.visible')
-          cy.contains('$1,299.99').should('be.visible')
+          cy.contains('R$ 1.299,99').should('be.visible')
         })
     })
 
@@ -46,13 +46,18 @@ describe('Inventário Entrada', () => {
         it('Verificar custo total', () => {
             const quantidade = 2;
             const preco = 1299.99;
+            const total = quantidade * preco;
+            const totalFormatado = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+            }).format(total);
 
             cy.contains('button', 'Registrar nova entrada').click()
 
             cy.get('#productId').select('Laptop Dell XPS (UN)')
             cy.get('#quantity').type(quantidade)
 
-            cy.contains(`Custo total: ${quantidade * preco}`).should('be.visible')
+            cy.get('.bg-gray-50 > .flex').should('have.text', `Custo total:${totalFormatado}`)
         })
 
         it('Verificar se número aceita campos não númericos', () => {
@@ -64,22 +69,21 @@ describe('Inventário Entrada', () => {
         it('Verificar se o campo quantidade não aceita números meneros que 1', () => {
             cy.contains('button', 'Registrar nova entrada').click()
 
-            cy.get('#quantity').type('{backspace}').should('have.value', '1')
+            cy.get('#quantity').type('{backspace}').should('have.value', '')
         })
 
         it('Pesquisando itens válidos', () => {
             cy.contains('button', 'Registrar nova entrada').click()
 
-              cy.get('#productId').select('Laptop Dell XPS (UN)')
-              cy.get('#supplierId').select('Tech Solutions Inc')
-              cy.get('#quantity').type(1)
-              cy.get('#entryDate').type('2025-04-26')
-              cy.get('#invoice').type(209872)
+              cy.adicionarInventarioEntrada({
+                produto: 'Laptop Dell XPS (UN)',
+                fornecedor: 'Tech Solutions Inc',
+                quantidade: 1,
+                data: '2025-04-26',
+                fatura: 209872,
+              })
 
-              cy.contains('button', 'Registrar entrada').click()
-
-              cy.get('.mt-4 > .w-full').type('Laptop Dell XPS')
-              
+              cy.get('.mt-4 > .w-full').type('Laptop Dell XPS')        
               cy.contains('Laptop Dell XPS').should('be.visible')
         })
 

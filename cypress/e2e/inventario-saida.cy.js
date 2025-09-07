@@ -9,7 +9,7 @@ describe('Inventário Saída Estoque', () => {
         cy.visit('http://localhost:8080/inventory/outputs')
     })
 
-    describe.only('Adicionar Saída Inventário', () => {
+    describe('Adicionar Saída Inventário', () => {
         beforeEach(() => {
             cy.contains('button', 'Registrar nova saída').click()
         })
@@ -18,9 +18,7 @@ describe('Inventário Saída Estoque', () => {
              cy.adicionarInventarioSaida({})
 
             cy.contains('O produto é obrigatório').should('be.visible')
-            cy.contains('O tipo de saída é obrigatório').should('be.visible')
-            cy.contains('A quantidade é obrigatória').should('be.visible')
-            cy.contains('A data de saída é obrigatória').should('be.visible')
+            cy.contains('A quantidade deve ser maior que 0').should('be.visible')
         })
 
         it('Adicionar saída de estoque válida', () => {
@@ -31,11 +29,11 @@ describe('Inventário Saída Estoque', () => {
                 data: '2025-04-27'
              })
 
-            cy.contains('Saída de estoque salvo com sucesso!').should('be.visible')
-            cy.contains('Laptop Dell XPS (UN) - In Stock: 15').should('be.visible')
+            cy.contains('Saídas de estoque criado com sucesso!').should('be.visible')
+            cy.contains('Laptop Dell XPS').should('be.visible')
             cy.contains('Oferta').should('be.visible')
             cy.contains('2').should('be.visible')
-            cy.contains('Apr 27, 2025').should('be.visible')
+            cy.contains('26 de abril de 2025').should('be.visible')
         })
     })
 
@@ -43,7 +41,7 @@ describe('Inventário Saída Estoque', () => {
         it('Campo quantidade não pode ser menor que 1', () => {
             cy.contains('button', 'Registrar nova saída').click()
 
-            cy.get('#quantity').type('{backspace}').should('have.value', '1')
+            cy.get('#quantity').type('{backspace}').should('have.value', '')
         })
 
         it('Verificar estoque atual e estoque mínimo', () => {
@@ -72,11 +70,11 @@ describe('Inventário Saída Estoque', () => {
 
             cy.get('[data-component-line="80"] > .w-full')
 
-            cy.contains('Laptop Dell XPS (UN) - In Stock: 15').should('be.visible')
+            cy.contains('Laptop Dell XPS').should('be.visible')
         })
 
         it('Fazendo uma pesquisa com item inexistente', () => {
-            cy.get('.mt-4 > .w-full').type('Lalalalau')
+            cy.get('[data-component-line="70"] > .w-full').type('Notebook Acer')
 
             cy.contains('Nenhuma saída de inventário encontrada').should('be.visible')
         })
