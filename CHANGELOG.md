@@ -5,6 +5,7 @@
 - [x] Correção dos bugs em inventário:
     - Entradas: mensagens de erro em campos obrigatórios, toast de sucesso, validação de quantidade e cálculo do custo total.
     - Saídas: mensagens de erro em campos obrigatórios, toast de sucesso, validação de quantidade, pesquisa de saídas cadastradas e mensagens para produtos inexistentes.
+- [x] Configuração de pipeline CI/CD no GitHub Actions para execução dos testes automatizados.
 
 ## [28/04/2025]
 - [x] Criação dos testes automatizados de inventário entradas e saídas: 
