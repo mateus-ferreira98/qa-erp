@@ -17,6 +17,21 @@ Criar um ambiente funcional de um sistema ERP para simular cenários reais de QA
 
 ---
 
+## ⚙️ Integração Contínua (CI/CD)
+
+Este projeto utiliza **GitHub Actions** para automatizar o processo de qualidade.  
+O pipeline está configurado para rodar sempre que houver **push** ou **pull request** na branch `main`, executando:
+
+- ✅ Instalação das dependências do projeto  
+- ✅ Build da aplicação  
+- ✅ Execução dos testes automatizados com **Cypress**
+
+📂 Arquivo de configuração: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+
+Isso garante que cada alteração no projeto seja validada automaticamente, aumentando a confiabilidade e a qualidade do código.
+
+---
+
 ## ✅ Funcionalidades já criadas
 
 - 📊 **Painel de Dashboard**
